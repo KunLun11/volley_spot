@@ -17,10 +17,9 @@ MEDIA_DIR = (DATA_DIR / "media").resolve()
 for directory in [DATA_DIR, STATIC_DIR, TEMPLATE_DIR, LOG_DIR, MEDIA_DIR]:
     os.makedirs(directory, exist_ok=True)
 
-SECRET_KEY = os.getenv("SECRET_KEY")
-DEBUG = os.getenv("DEBUG", default=True)
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", default=[])
-AUTH_USER_MODEL = "account.User"
+SECRET_KEY = env.str("SECRET_KEY")
+DEBUG = env.bool("DEBUG", default=True)
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["localhost", "127.0.0.1", "0.0.0.0"])
 
 INSTALLED_APPS = [
     # UNFOLD
@@ -40,6 +39,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    # APPS
+    "base",
+    "account",
 ]
 
 MIDDLEWARE = [
@@ -57,7 +59,7 @@ ROOT_URLCONF = "config.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [TEMPLATE_DIR],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -98,4 +100,35 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 
+AUTH_USER_MODEL = "account.User"
+
 STATIC_URL = "static/"
+STATIC_ROOT = BASE_DIR / "static"
+SERVE_STATIC = True
+
+UNFOLD = {
+    "SITE_TITLE": "VolleySpot - управление записями на игры",
+    "SITE_HEADER": "VolleySpot админ",
+    "SITE_SYMBOL": "sports_volleyball",
+    "SHOW_HISTORY": True,
+    "SHOW_VIEW_ON_SITE": True,
+    "COMMAND": {
+        "search_models": True,
+        "search_callback": "utils.search_callback",
+        "show_history": True,
+    },
+    "COLORS": {
+        "primary": {
+            "50": "250 245 255",
+            "100": "243 232 255",
+            "200": "233 213 255",
+            "300": "216 180 254",
+            "400": "192 132 252",
+            "500": "168 85 247",
+            "600": "147 51 234",
+            "700": "126 34 206",
+            "800": "107 33 168",
+            "900": "88 28 135",
+        },
+    },
+}
